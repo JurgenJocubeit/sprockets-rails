@@ -55,6 +55,7 @@ module Sprockets
     config.assets.debug      = false
     config.assets.compile    = true
     config.assets.digest     = false
+    config.assets.dynamic    = false
 
     rake_tasks do |app|
       require 'sprockets/rails/task'
@@ -106,12 +107,9 @@ module Sprockets
       end
 
       # No more configuration changes at this point.
-      # With cache classes on, Sprockets won't check the FS when files
-      # change. Preferable in production when the FS only changes on
-      # deploys when the app restarts.
-      #if config.cache_classes
-      #  app.assets = app.assets.index
-      #end
+      # Unless config.assets.dynamic is true, Sprockets won't check 
+      # the FS when files change.
+      app.assets = app.assets.index unless config.assets.dynamic
 
       if config.assets.compile
         if app.routes.respond_to?(:prepend)
